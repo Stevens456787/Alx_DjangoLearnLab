@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
+# new 
 from .models import Book
 
 @admin.register(Book)
