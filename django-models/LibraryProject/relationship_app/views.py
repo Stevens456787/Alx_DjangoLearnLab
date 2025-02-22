@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import DetailView
 from django.views import View
-from .models import Book, Library  # Ensure Library is imported here
+from .models import Book
+from .models import Library# Ensure Library is imported here
 from .forms import BookForm  # Ensure this is defined in forms.py
 
 # Function-based view to list all books
