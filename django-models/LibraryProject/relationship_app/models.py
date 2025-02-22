@@ -4,12 +4,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Define Author model first to avoid reference issues
-class Author(models.Model):
-    name = models.CharField(max_length=100)
-    bio = models.TextField()
+#class Author(models.Model):
+    #name = models.CharField(max_length=100)
+    #bio = models.TextField()
 
-    def __str__(self):
-        return self.name
+    #def __str__(self):
+        #return self.name
 
 
 class UserProfile(models.Model):
