@@ -4,12 +4,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Define Author model first to avoid reference issues
-#class Author(models.Model):
-    #name = models.CharField(max_length=100)
-    #bio = models.TextField()
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    bio = models.TextField()
 
-    #def __str__(self):
-        #return self.name
+    def __str__(self):
+        return self.name
 
 
 class UserProfile(models.Model):
@@ -23,6 +23,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+    
+    class meta:
+        permissions = [
+            ("can_view_admin_dashboard", "Can view admin dashboard"),
+            ("can_view_librarian_dashboard", "Can view library dashboard"),
+            ("can_view_member_area", "Can view member area"),
+        ]
 
 
 @receiver(post_save, sender=User)
