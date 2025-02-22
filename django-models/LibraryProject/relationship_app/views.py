@@ -33,6 +33,18 @@ class RegisterView(View):
             return redirect('list_books')
         return render(request, 'relationship_app/register.html', {'form': form})
 
+# Function-based view for user registration
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')  # Change 'home' to your actual homepage URL name
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
 # User Login
 def login_view(request):
     if request.method == 'POST':
