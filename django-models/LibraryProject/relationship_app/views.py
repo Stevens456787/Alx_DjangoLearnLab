@@ -71,7 +71,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Change 'home' to your actual homepage URL name
+            return redirect('relationship_app:list_books')
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
