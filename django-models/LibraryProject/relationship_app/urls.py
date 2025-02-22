@@ -11,9 +11,9 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('register/', register, name='register'),
     
-    path('admin-dashboard/',name='admin_dashboard'),
-    path('librarian-dashboard/',name='librarian_dashboard'),
-    path('member-dashboard/',name='member_dashboard'),
+    #path('admin-dashboard/',name='admin_dashboard'),
+    #path('librarian-dashboard/',name='librarian_dashboard'),
+    #path('member-dashboard/',name='member_dashboard'),
     
     path("add-book/", add_book, name="add_book"),
     path("edit-book/<int:book_id>/", edit_book, name="edit_book"),
