@@ -10,30 +10,30 @@ from .forms import BookForm
 
 # Ensure this is defined in forms.py
 
-def check_Admin(user):
+def check_admin(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-@user_passes_test(check_Admin)
-def Admin_view(request):
-    return render(request, 'relationship_app/Admin.html', {
+@user_passes_test(check_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin.html', {
         'message': 'Welcome to the Admin Dashboard'
     })
 
-def check_Librarian(user):
+def check_librarian(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
 
-@user_passes_test(check_Librarian)
-def Librarian_view(request):
-    return render(request, 'relationship_app/Librarian.html', {
+@user_passes_test(check_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian.html', {
         'message': 'Welcome to the Librarian Dashboard'
     })
 
-def check_Member(user):
+def check_member(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
-@user_passes_test(check_Member)
-def Member_view(request):
-    return render(request, 'relationship_app/Member.html', {
+@user_passes_test(check_member)
+def member_view(request):
+    return render(request, 'relationship_app/member.html', {
         'message': 'Welcome to the Member Area'
     })
 
