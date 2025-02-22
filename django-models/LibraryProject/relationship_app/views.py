@@ -1,12 +1,42 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.views.generic.detail import DetailView
 from django.views import View
 from .models import Book
 from .models import Library# Ensure Library is imported here
-from .forms import BookForm  # Ensure this is defined in forms.py
+from .forms import BookForm
+
+# Ensure this is defined in forms.py
+
+def check_admin(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+@user_passes_test(check_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin.html', {
+        'message': 'Welcome to the Admin Dashboard'
+    })
+
+def check_librarian(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+@user_passes_test(check_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian.html', {
+        'message': 'Welcome to the Librarian Dashboard'
+    })
+
+def check_member(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+@user_passes_test(check_member)
+def member_view(request):
+    return render(request, 'relationship_app/member.html', {
+        'message': 'Welcome to the Member Area'
+    })
+
 
 # Function-based view to list all books
 @login_required
