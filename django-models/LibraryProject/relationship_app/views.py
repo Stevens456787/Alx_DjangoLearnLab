@@ -15,7 +15,7 @@ def check_admin(user):
 
 @user_passes_test(check_admin)
 def admin_view(request):
-    return render(request, 'relationship_app/admin.html', {
+    return render(request, 'relationship_app/admin_view.html', {
         'message': 'Welcome to the Admin Dashboard'
     })
 
@@ -24,7 +24,7 @@ def check_librarian(user):
 
 @user_passes_test(check_librarian)
 def librarian_view(request):
-    return render(request, 'relationship_app/librarian.html', {
+    return render(request, 'relationship_app/librarian_view.html', {
         'message': 'Welcome to the Librarian Dashboard'
     })
 
@@ -33,7 +33,7 @@ def check_member(user):
 
 @user_passes_test(check_member)
 def member_view(request):
-    return render(request, 'relationship_app/member.html', {
+    return render(request, 'relationship_app/member_view.html', {
         'message': 'Welcome to the Member Area'
     })
 
