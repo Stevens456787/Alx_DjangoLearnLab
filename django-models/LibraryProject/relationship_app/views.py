@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import DetailView
+from django.views import View
 from .models import Book, Library  # Ensure Library is imported here
 from .forms import BookForm  # Ensure this is defined in forms.py
 
@@ -19,16 +20,18 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 # User Registration
-def register(request):
-    if request.method == 'POST':
+class RegisterView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, 'relationship_app/register.html', {'form': form})
+
+    def post(self, request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('list_books')
-    else:
-        form = UserCreationForm()
-    return render(request, 'relationship_app/register.html', {'form': form})
+        return render(request, 'relationship_app/register.html', {'form': form})
 
 # User Login
 def login_view(request):
