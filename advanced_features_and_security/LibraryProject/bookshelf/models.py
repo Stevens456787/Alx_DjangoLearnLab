@@ -53,3 +53,10 @@ class Library(models.Model):
 
     def __str__(self):
         return self.name
+
+
+from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    # Add any additional fields here
+    pass
