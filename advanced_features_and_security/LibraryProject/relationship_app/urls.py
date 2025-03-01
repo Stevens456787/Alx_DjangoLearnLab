@@ -5,7 +5,7 @@ from .views import admin_view, librarian_view, member_view
 from .views import list_books
 from .views import add_book
 from .views import edit_book
-from .views import delete_book
+from .views import register
 
 app_name = 'relationship_app'
 
@@ -20,7 +20,7 @@ urlpatterns = [
     # Authentication URLs
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
-    path('register/', auth_views.register, name='register'),
+    path('register/', register, name='register'),
     
     #path('admin-dashboard/',name='admin_dashboard'),
     #path('librarian-dashboard/',name='librarian_dashboard'),
