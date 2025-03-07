@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'csp',
     #Django rest framework
     'rest_framework',
-    'api'
+    'api',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,12 @@ SECURE_HSTS_PRELOAD = True
 
 # Trust the X-Forwarded-Proto header set by the proxy
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
