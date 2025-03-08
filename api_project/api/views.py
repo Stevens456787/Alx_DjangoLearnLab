@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.generics import ListAPIView
-from rest_frmaeworks.generics import ModelViewSet
+from rest_framework.generics import ModelViewSet
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticated
