@@ -40,10 +40,6 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'csp',
-    #Django rest framework
-    'rest_framework',
-    'api',
-    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

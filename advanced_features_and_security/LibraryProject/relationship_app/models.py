@@ -10,6 +10,7 @@ from django.conf import settings
 class Author(models.Model):
     name = models.CharField(max_length=100)
     bio = models.TextField()
+    age = models.TextField()
 
     def __str__(self):
         return self.name
