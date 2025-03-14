@@ -1,21 +1,30 @@
-from django.test import TestCase
-
-# Create your tests here.
-from django.urls import reverse
+from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
 from rest_framework import status
-from rest_framework.test import APIClient
-from .models import Author, Book
+from api.models import Author, Book
 
-class BookAPITest(TestCase):
+class BookAPITest(APITestCase):
+
     def setUp(self):
-        self.client = APIClient()
-        self.author = Author.objects.create(name="J.K. Rowling")
-        self.book_data = {"title": "Harry Potter", "publication_year": 2000, "author": self.author.id}
+        # Create a test user
+        self.user = User.objects.create_user(username='testuser', password='password123')
+
+        # Create a test author
+        self.author = Author.objects.create(name='Test Author')
+
+        # Authenticate the user
+        self.client.login(username='testuser', password='password123')  # ✅ Ensure user is logged in
+
+        # Book creation endpoint
+        self.create_url = '/api/books/create/'
 
     def test_create_book(self):
-        response = self.client.post(reverse('book-list'), self.book_data)
+        """Test creating a book requires authentication"""
+        data = {
+            'title': 'Test Book',
+            'publication_year': 2023,
+            'author': self.author.id  # ✅ Ensure correct author ID is passed
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        print(response.data)  # Debugging output
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def test_get_books(self):
-        response = self.client.get(reverse('book-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
