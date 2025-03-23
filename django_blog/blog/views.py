@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import login, logout, authenticate
+from .forms import RegisterForm
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
@@ -118,3 +122,36 @@ class PostByTagListView(ListView):
         tag_slug = self.kwargs.get('tag_slug')
         tag = get_object_or_404(Tag, slug=tag_slug)
         return Post.objects.filter(tags__in=[tag])
+    
+    
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = RegisterForm()
+    return render(request, 'blog/register.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('profile')
+        else:
+            return redirect(request, 'blog/login.html', {'error': 'Invalid credentials'})
+    return render(request, 'blog/login.html')
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+@login_required
+def profile_view(request):
+    return render(request, 'blog/profile.html')

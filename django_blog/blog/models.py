@@ -21,3 +21,11 @@ class Comment(models.Model):
     
     def __str__(self):
         return f"Comment by {self.user.username} on {self.post.title}"
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    profile_pic = models.ImageField(upload_to="profile_pics", blank=True, null=True)
+    
+    def __str__(self):
+        return self.user.username
