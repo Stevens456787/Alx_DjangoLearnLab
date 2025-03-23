@@ -90,3 +90,19 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+    
+
+def search_posts(request):
+    query = request.GET.get('q')
+    results = []
+    
+    if query:
+        results = Post.objects.filter(
+            title__icontains=query
+        ) | Post.objects.filter(
+            tags__name__icontains=query
+        ) | Post.objects.filter(
+            content__icontains=query
+        ).distinct()
+
+    return render(request, 'blog/search_results.html', {'results': results, 'query': query})
