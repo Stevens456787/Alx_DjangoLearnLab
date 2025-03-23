@@ -81,17 +81,16 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-#DATABASES = {
-    #"default": {
-        #"ENGINE": "django.db.backends.postgresql",
-        #"NAME": "your_database_name",  # Replace with your database name
-        #"USER": "your_database_user",  # Replace with your database user
-        #"PASSWORD": "your_password",   # Replace with your database password
-        #"HOST": "localhost",           # Replace with your database host
-        #"PORT": "5432",                # Replace with your database port
-    #}
-#}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "ronaldo",
+        "HOST": "127.0.0.1" ,
+        "PORT": "5432",                # Replace with your database port
+        }
+}
 
 
 # Password validation
