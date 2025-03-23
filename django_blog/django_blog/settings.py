@@ -81,6 +81,17 @@ DATABASES = {
     }
 }
 
+#DATABASES = {
+    #"default": {
+        #"ENGINE": "django.db.backends.postgresql",
+        #"NAME": "your_database_name",  # Replace with your database name
+        #"USER": "your_database_user",  # Replace with your database user
+        #"PASSWORD": "your_password",   # Replace with your database password
+        #"HOST": "localhost",           # Replace with your database host
+        #"PORT": "5432",                # Replace with your database port
+    #}
+#}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -117,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Add this line
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

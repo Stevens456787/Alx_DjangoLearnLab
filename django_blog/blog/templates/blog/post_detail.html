@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }} - Django Blog{% endblock %}
+{% block content %}
+    <h2>{{ post.title }}</h2>
+    <p>By {{ post.author }} | {{ post.published_date }}</p>
+    <p>{{ post.content }}</p>
+    {% if user.is_authenticated and user == post.author %}
+        <a href="{% url 'post_update' post.pk %}">Edit</a> | 
+        <a href="{% url 'post_delete' post.pk %}">Delete</a>
+    {% endif %}
+    <a href="{% url 'post_list' %}">Back to Home</a>
+{% endblock %}
