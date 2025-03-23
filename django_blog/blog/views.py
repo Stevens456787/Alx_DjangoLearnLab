@@ -23,6 +23,7 @@ class PostDetailView(DetailView):
 # Create a new post (Only for logged-in users)
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
+    fields = ['title', 'content']
     form_class = PostForm
     template_name = "blog/post_form.html"
 
@@ -33,6 +34,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 # Update an existing post (Only the author can edit)
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
+    fields = ['title', 'content']
     form_class = PostForm
     template_name = "blog/post_form.html"
 
