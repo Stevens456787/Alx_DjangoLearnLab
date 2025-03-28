@@ -3,15 +3,17 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token 
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 
 User = get_user_model()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
     if request.method == 'POST':
         serializer = RegisterSerializer(data=request.data)
@@ -22,6 +24,7 @@ def register(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
     if request.method == 'POST':
         username = request.data.get('username')
