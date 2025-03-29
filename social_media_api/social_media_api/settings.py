@@ -132,6 +132,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Security settings
+SECURE_BROWSER_XSS_FILTER = True  # Enables the XSS filter in supported browsers
+X_FRAME_OPTIONS = "DENY"  # Prevents the site from being rendered in an iframe
+SECURE_SSL_REDIRECT = True  # Redirects all HTTP traffic to HTTPS
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
