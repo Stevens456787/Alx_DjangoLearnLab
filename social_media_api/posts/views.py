@@ -28,8 +28,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)  # Fetch the post
-        like, created = Like.objects.get_or_create(user=request.user, post=post)  # Handle like
+        # Fetch the post using get_object_or_404
+        post = get_object_or_404(Post, pk=pk)
+        
+        # Check if the user has already liked the post
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
             # Create a notification for the post author
             Notification.objects.create(
