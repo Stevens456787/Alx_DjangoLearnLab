@@ -13,7 +13,7 @@ User = get_user_model()
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -25,7 +25,7 @@ class RegisterView(generics.GenericAPIView):
 
 
 class LoginView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -38,7 +38,7 @@ class LoginView(generics.GenericAPIView):
 
 
 class UserListView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         users = User.objects.all()
