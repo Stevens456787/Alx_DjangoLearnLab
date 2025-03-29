@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, filters, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
+from django.shortcuts import generics, get_object_or_404
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from accounts.models import CustomUser
