@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_object_or_404  # Import get_object_or_404
-
-# Create your views here.
-from rest_framework import viewsets, permissions, filters
-from .models import Post, Comment, Like, Notification  # Import Like and Notification models
-from .serializers import PostSerializer, CommentSerializer
-from rest_framework.decorators import action
+from rest_framework import viewsets, permissions, filters, status, generics
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from accounts.models import CustomUser
+from notifications.models import Notification
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -19,29 +19,52 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def comment(self, request, pk=None):
-        post = self.get_object()
+        post = get_object_or_404(Post, pk=pk)
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(post=post, author=request.user)
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            # Create notification
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='commented on your post',
+                target=post,
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
-        # Fetch the post using get_object_or_404
         post = get_object_or_404(Post, pk=pk)
-        
-        # Check if the user has already liked the post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
-            # Create a notification for the post author
+            # Create notification
             Notification.objects.create(
-                user=post.author,
-                message=f"{request.user.username} liked your post '{post.title}'."
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post,
             )
-            return Response({"message": "Post liked successfully."}, status=201)
-        else:
-            return Response({"message": "You have already liked this post."}, status=400)
+            return Response({'status': 'liked'}, status=status.HTTP_201_CREATED)
+        return Response({'status': 'already liked'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        like = get_object_or_404(Like, user=request.user, post=post)
+        like.delete()
+        return Response({'status': 'unliked'}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def feed(self, request):
+        following_users = request.user.followers.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        page = self.paginate_queryset(posts)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
