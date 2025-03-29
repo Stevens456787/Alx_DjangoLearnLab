@@ -131,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Directory where static files will be collected
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True  # Enables the XSS filter in supported browsers
