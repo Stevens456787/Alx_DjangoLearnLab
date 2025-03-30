@@ -9,53 +9,21 @@ from .serializers import PostSerializer, CommentSerializer, LikeSerializer
 from accounts.models import CustomUser
 from notifications.models import Notification
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def follow_user(request, user_id):
-    try:
-        user_to_follow = CustomUser.objects.get(id=user_id)
-    except CustomUser.DoesNotExist:
-        return Response({'detail': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+class UserFeedView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    user = request.user
+    def get_queryset(self):
+        user = self.request.user
 
-    if user == user_to_follow:
-        return Response({'detail': 'You cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
+        # Get posts from the users the current user is following
+        following_users = user.following.all()
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+    
+    def get(self, request):
+        # Use the get_queryset method to get the filtered posts
+        posts = self.get_queryset()
 
-    # Add the user to the following list
-    user.following.add(user_to_follow)
-    user_to_follow.followers.add(user)
+        # Serialize the posts
+        serializer = PostSerializer(posts, many=True)
 
-    return Response({'detail': 'Followed successfully'}, status=status.HTTP_200_OK)
-
-#unfollow user function
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def unfollow_user(request, user_id):
-    try:
-        user_to_unfollow = CustomUser.objects.get(id=user_id)
-    except CustomUser.DoesNotExist:
-        return Response({'detail': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    user = request.user
-
-    if user == user_to_unfollow:
-        return Response({'detail': 'You cannot unfollow yourself'}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Remove the user from the following list
-    user.following.remove(user_to_unfollow)
-    user_to_unfollow.followers.remove(user)
-
-    return Response({'detail': 'Unfollowed successfully'}, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def user_feed(request):
-    # user = CustomUser
-    user = request.user    
-    # Get posts from the users the current user is following
-    followed_users = user.following.all()
-    posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
-
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
