@@ -6,6 +6,11 @@ from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class CustomUser(AbstractUser):
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
 
 CustomUser = get_user_model()
 
