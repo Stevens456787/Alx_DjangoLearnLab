@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token  # Fixed typo in import
 from rest_framework.response import Response
 from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, permissions
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
@@ -16,7 +16,12 @@ CustomUser = get_user_model()
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [IsAuthenticated]  # Fixed typo (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
+    
+    
+    # Fixed typo (IsAuthenticated)
+    
+    @permissions.IsAuthenticated
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)  # Fixed typo (data-request.data)
