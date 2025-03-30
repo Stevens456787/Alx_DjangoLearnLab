@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token  # Fixed typo in import
 from rest_framework.response import Response
 from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated, permissions
+from rest_framework.permissions import IsAuthenticated
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
