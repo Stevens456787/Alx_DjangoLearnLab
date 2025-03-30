@@ -3,15 +3,15 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token  # Fixed typo in import
 from rest_framework.response import Response
 from rest_framework import status, generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+CustomUser = get_user_model()
 
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]  # Fixed typo (IsAuthenticated)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)  # Fixed typo (data-request.data)
@@ -22,7 +22,7 @@ class RegisterView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -34,10 +34,10 @@ class LoginView(generics.GenericAPIView):
         return Response({'error': "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)  # Fixed bracket and quote
 
 class UserListView(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        users = User.objects.all()
+        users = CustomUser.objects.all()
         user_data = [{'id': user.id, 'username': user.username, 'email': user.email} for user in users]  # Fixed brackets
         return Response(user_data, status=status.HTTP_200_OK)
 
@@ -47,8 +47,8 @@ class FollowUserView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user_to_follow_id = kwargs.get('user_id')
         try:
-            user_to_follow = User.objects.get(id=user_to_follow_id)
-        except User.DoesNotExist:
+            user_to_follow = CustomUser.objects.get(id=user_to_follow_id)
+        except CustomUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         
         if request.user == user_to_follow:
@@ -66,8 +66,8 @@ class UnfollowUserView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user_to_unfollow_id = kwargs.get('user_id')
         try:
-            user_to_unfollow = User.objects.get(id=user_to_unfollow_id)
-        except User.DoesNotExist:
+            user_to_unfollow = CustomUser.objects.get(id=user_to_unfollow_id)
+        except CustomUser.DoesNotExist:
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
         
         if not request.user.following.filter(id=user_to_unfollow_id).exists():
