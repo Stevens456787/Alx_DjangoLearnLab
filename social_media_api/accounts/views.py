@@ -8,6 +8,7 @@ from .serializers import RegisterSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from rest_framework.decorators import api_view, permission_classes
+from django import models
 
 class CustomUser(AbstractUser):
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
